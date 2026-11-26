@@ -6,6 +6,7 @@ on:
     paths:
       - 'docs/**'
       - '.github/workflows/moonlit-pages.yml'
+      - 'site-tools/check_public_site.py'
   workflow_dispatch:
 
 permissions:
@@ -36,3 +37,8 @@ jobs:
       - name: Deploy GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Check public homepage, assets and article links
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: python3 site-tools/check_public_site.py

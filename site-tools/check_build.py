@@ -50,3 +50,11 @@ assert (OUT/'assets/katex/katex.min.css').exists()
 assert (OUT/'assets/katex/fonts/KaTeX_Main-Regular.woff2').exists()
 assert not list(OUT.rglob('*.html'))==[], 'HTML files missing'
 print(f'PASS build: {len(notes)} published articles, {math_pages} with math, static index + editor + 4 themes')
+
+# Admin must link to real authenticated editors, not suggest that static Pages can save edits.
+admin_html=(OUT/'admin/index.html').read_text(encoding='utf-8')
+assert 'https://app.pagescms.org/' in admin_html
+assert 'https://github.com/apps/pages-cms' in admin_html
+assert '/edit/main/site-content/site.yml' in admin_html
+assert '/new/main/site-content/articles' in admin_html
+assert '不是可直接改字的编辑器' in admin_html

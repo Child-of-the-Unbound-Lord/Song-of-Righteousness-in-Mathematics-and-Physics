@@ -17,19 +17,50 @@
 .admin-top{display:flex;justify-content:space-between;align-items:center;gap:15px}.admin-top a{font-size:14px;color:var(--accent)}
 .admin-status{display:flex;align-items:center;flex-wrap:wrap;gap:12px;border:1px solid var(--line);padding:14px;border-radius:10px;background:var(--panel2);font-size:13px}.admin-status span{color:var(--muted);flex:1}.admin-status span[data-ready="yes"]{color:#bce7bf}.admin-status span[data-ready="no"]{color:#f1c59d}.admin-fields{display:grid;gap:12px;margin-top:22px}.admin-fields label{color:var(--text);font-size:13px}.admin-fields textarea,.admin-fields input{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:12px;font:13px/1.7 ui-monospace,Consolas,monospace;overflow-wrap:anywhere}.admin-fields button,.admin-status button{color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 14px;justify-self:start}.admin-fields button:hover,.admin-status button:hover{border-color:var(--accent)}.admin-fields [role=status]{color:var(--muted);font-size:12px}
 @media(max-width:720px){.admin-grid{grid-template-columns:1fr}.admin-shell{padding:28px 18px 65px}}
+.quick-task-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}
+.quick-task{display:flex;flex-direction:column;gap:6px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);padding:16px;color:var(--text)!important;text-decoration:none!important;transition:border-color .2s,transform .2s}
+.quick-task strong{font-size:14px;line-height:1.5}.quick-task span{color:var(--muted);font-size:12px;line-height:1.75}
+.quick-task:hover,.quick-task:focus-visible{border-color:var(--accent);transform:translateY(-1px)}
+.admin-panel .button{display:inline-flex;margin:3px 7px 6px 0}
+@media(max-width:620px){.quick-task-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body data-theme="mai">
 <div class="sky" aria-hidden="true"><i class="moon"></i></div>
 <div class="admin-shell">
 <div class="admin-top"><a href="../index.html">← 返回月下研究室</a><span>OWNER'S EDITING DESK</span></div>
-<h1>内容管理<span class="dot">.</span></h1>
-<p class="admin-lead">文章、简介、项目、研究方向、论文和角色主题，统一在 Pages CMS 的网页编辑器里管理。保存后 GitHub 会自动构建并更新公开网站。</p>
-<div class="admin-panel">
-<h2>开始编辑</h2>
-<p>第一次使用：点击下面的按钮，使用你的 GitHub 账号登录 Pages CMS，只授权个人主页仓库 <strong>Song-of-Righteousness-in-Mathematics-and-Physics</strong>。此后可以直接进入内容管理界面。</p>
-<a class="button primary" href="https://app.pagescms.org/" target="_blank" rel="noopener noreferrer">使用 GitHub 登录内容后台 ↗</a>
-<p>仓库：<code>Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics</code>，默认分支为 <code>main</code>。只有拥有仓库写入权限的人才能修改内容；访客即使看到本页也不能编辑。</p>
+<h1>站长工作台<span class="dot">.</span></h1>
+<p class="admin-lead">这是站长入口，不是可直接改字的编辑器。网页内容存放在 GitHub 仓库里；你需要从下面进入真正的 <strong>Pages CMS 表单后台</strong>，或使用 GitHub 网页编辑。保存并提交后，网站才会自动更新。</p>
+<div class="admin-panel" id="begin">
+<h2>① 进入真正的表单编辑器</h2>
+<p><strong>Pages CMS 是独立的编辑网站，不在本页直接输入文字。</strong>点击下方按钮会打开新页面；选择「Sign in with GitHub」，用 <code>Child-of-the-Unbound-Lord</code> 登录，进入名为 <code>Song-of-Righteousness-in-Mathematics-and-Physics</code> 的仓库，并确认分支是 <code>main</code>。</p>
+<p><a class="button primary" href="https://app.pagescms.org/" target="_blank" rel="noopener noreferrer">打开 Pages CMS 表单编辑器 ↗</a> <a class="button" href="https://github.com/apps/pages-cms" target="_blank" rel="noopener noreferrer">首次安装 Pages CMS App ↗</a></p>
+<p>只有第一次需要在 GitHub 中授权 Pages CMS。授权时可选择 <strong>Only select repositories</strong>，并只勾选这一个仓库。之后在表单里改简介、文章、研究方向或项目，点击保存即可提交到 GitHub，自动发布工作流会接着运行。</p>
+<p>即使别人打开本站的「站长工作台」，也不能因此取得编辑权限；实际读写权限由 GitHub 登录及 App 授权控制。<a href="https://github.com/settings/installations" target="_blank" rel="noopener noreferrer">检查已安装的 GitHub Apps ↗</a></p>
+</div>
+<div class="admin-panel" id="quick-edit">
+<h2>② 快捷编辑 · 不用找文件</h2>
+<p>若你还没安装 Pages CMS，也可以直接点下面任意项目，进入 GitHub 网页编辑器。修改后选择 <strong>Commit changes</strong> 保存，网站会自动重新发布；不需要 Git 命令。</p>
+<div class="quick-task-grid">
+<a class="quick-task" href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/edit/main/site-content/site.yml" target="_blank" rel="noopener noreferrer"><strong>修改首页与关于我 ↗</strong><span>姓名、身份、简介、栏目文案、联系链接</span></a>
+<a class="quick-task" href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/new/main/site-content/articles" target="_blank" rel="noopener noreferrer"><strong>新建 Markdown 文章 ↗</strong><span>填写英文文件名，例如 my-first-note.md，再写 frontmatter 与正文</span></a>
+<a class="quick-task" href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/tree/main/site-content/articles" target="_blank" rel="noopener noreferrer"><strong>修改已有学习手记 ↗</strong><span>打开对应 .md 文件 → 铅笔图标编辑</span></a>
+<a class="quick-task" href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/edit/main/site-content/research.yml" target="_blank" rel="noopener noreferrer"><strong>管理研究方向 ↗</strong><span>添加、修改数学、物理等研究兴趣</span></a>
+<a class="quick-task" href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/edit/main/site-content/projects.yml" target="_blank" rel="noopener noreferrer"><strong>管理项目与代码 ↗</strong><span>仓库链接、项目介绍、类型</span></a>
+<a class="quick-task" href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/edit/main/site-content/publications.yml" target="_blank" rel="noopener noreferrer"><strong>管理论文与成果 ↗</strong><span>论文条目、PDF、DOI、BibTeX</span></a>
+<a class="quick-task" href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/edit/main/site-content/themes.yml" target="_blank" rel="noopener noreferrer"><strong>修改动漫主题 ↗</strong><span>角色名称、场景描述、插画路径</span></a>
+<a class="quick-task" href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/edit/main/site-content/comments.yml" target="_blank" rel="noopener noreferrer"><strong>修改评论设置 ↗</strong><span>启用 giscus 前需要完成 Discussions 授权</span></a>
+</div>
+<p>注意：这条快捷路径是在 <strong>GitHub 网站</strong>上保存，并非在公开主页中直接修改。想使用无代码表单、上传图片或一键创建文章，请使用上面的 Pages CMS。</p>
+</div>
+<div class="admin-panel" id="troubleshooting">
+<h2>③ 看不到编辑按钮？按这里排查</h2>
+<ol>
+<li><strong>只能看到此管理页：</strong>正常。本页是入口，点击上面的「打开 Pages CMS 表单编辑器」。</li>
+<li><strong>Pages CMS 里看不到仓库：</strong>到 <a href="https://github.com/settings/installations" target="_blank" rel="noopener noreferrer">GitHub Apps 设置</a> 检查 Pages CMS 是否安装、授权的仓库是否正确；没安装先点击上面的安装按钮。</li>
+<li><strong>看到了仓库但找不到栏目：</strong>确认选择的是 <code>main</code> 分支，且仓库根目录存在 <a href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/blob/main/.pages.yml" target="_blank" rel="noopener noreferrer">.pages.yml 配置</a>。如果栏目长时间不刷新，先重新进入仓库，避免使用旧的缓存配置。</li>
+<li><strong>编辑后网站没有更新：</strong>确认保存生成了 GitHub 提交，再检查 <a href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/actions/workflows/moonlit-pages.yml" target="_blank" rel="noopener noreferrer">自动发布记录</a>；只有部署成功才会影响公开页面。</li>
+</ol>
 </div>
 <div class="admin-grid">
 <div class="admin-panel"><h2>文章与 LaTeX</h2><p>进入「Markdown 文章」，创建或编辑文章。正文切换到 <strong>Source</strong> 源码模式，输入标准 Markdown。</p>

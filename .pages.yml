@@ -1,5 +1,9 @@
 # Pages CMS: https://app.pagescms.org/
 # Sign in with GitHub and grant access to this repository only.
+settings:
+  content:
+    merge: true
+
 media:
   - name: article_images
     label: 文章图片
@@ -15,6 +19,8 @@ content:
     type: file
     path: site-content/site.yml
     format: yaml
+    operations:
+      delete: false
     fields:
       - { name: title, label: 网站名称, type: string, required: true }
       - { name: english_title, label: 英文名称, type: string }
@@ -88,6 +94,8 @@ content:
     type: file
     path: site-content/research.yml
     format: yaml
+    operations:
+      delete: false
     list: true
     fields:
       - { name: title, label: 方向, type: string }
@@ -98,6 +106,8 @@ content:
     type: file
     path: site-content/projects.yml
     format: yaml
+    operations:
+      delete: false
     list: true
     fields:
       - { name: title, label: 项目名称, type: string }
@@ -109,6 +119,8 @@ content:
     type: file
     path: site-content/publications.yml
     format: yaml
+    operations:
+      delete: false
     list: true
     fields:
       - { name: title, label: 标题, type: string }
@@ -123,6 +135,8 @@ content:
     type: file
     path: site-content/themes.yml
     format: yaml
+    operations:
+      delete: false
     list: true
     fields:
       - { name: id, label: 主题 ID (mai/yukino/frieren/eru), type: string }
@@ -139,6 +153,8 @@ content:
     type: file
     path: site-content/comments.yml
     format: yaml
+    operations:
+      delete: false
     fields:
       - { name: enabled, label: 启用评论, type: boolean }
       - { name: repo, label: 评论仓库, type: string }

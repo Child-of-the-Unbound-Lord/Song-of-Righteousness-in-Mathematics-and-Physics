@@ -17,3 +17,12 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(-
 .publication-links a,.publication-links button{font-size:12px;color:var(--accent);background:none;border:0;padding:0;cursor:pointer}
 #comments #comment-box:not(.empty){min-height:200px}
 @media(max-width:580px){.hero-art{height:360px}.theme-illustration{object-position:57% 50%}.scene-head,.scene-foot{left:18px;right:18px}}
+
+/* Search feedback and typography improvements */
+.result-count{font-size:12px;color:var(--muted);margin:10px 0 3px;min-height:1.5em}
+@media(max-width:580px){.theme-panel .themes{width:100%}.theme-panel .themes button{flex:1 1 calc(50% - 8px)}.topbar nav{flex-wrap:wrap;justify-content:flex-start;gap:11px 17px}}
+
+/* Optional links are edited from Pages CMS, not from HTML templates. */
+.contact-links{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:5px}
+.contact-links a{font-size:11px;color:var(--accent);text-underline-offset:3px}
+.contact-links a:hover{text-decoration:underline}

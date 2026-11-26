@@ -5,10 +5,46 @@ on:
     branches:
       - master
       - main
+    paths:
+      - "assets/**"
+      - "_sass/**"
+      - "_scripts/**"
+      - "_includes/**"
+      - "_layouts/**"
+      - "_pages/**"
+      - "_posts/**"
+      - "_projects/**"
+      - "_books/**"
+      - "_news/**"
+      - "_teachings/**"
+      - "_bibliography/**"
+      - "_plugins/**"
+      - "_data/**"
+      - "_config.yml"
+      - "Gemfile"
+      - "Gemfile.lock"
   push:
     branches:
       - master
       - main
+    paths:
+      - "assets/**"
+      - "_sass/**"
+      - "_scripts/**"
+      - "_includes/**"
+      - "_layouts/**"
+      - "_pages/**"
+      - "_posts/**"
+      - "_projects/**"
+      - "_books/**"
+      - "_news/**"
+      - "_teachings/**"
+      - "_bibliography/**"
+      - "_plugins/**"
+      - "_data/**"
+      - "_config.yml"
+      - "Gemfile"
+      - "Gemfile.lock"
 
 jobs:
   check:

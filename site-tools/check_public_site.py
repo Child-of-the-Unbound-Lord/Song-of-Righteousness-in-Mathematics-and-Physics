@@ -58,12 +58,17 @@ for entry in notes:
     slug=entry['slug']
     if not re.fullmatch(r'[a-z0-9-]+',slug):sys.exit('Unsafe article slug')
     articles[f'posts/{slug}.html']=request(f'posts/{slug}.html')
-if not articles:sys.exit('No published articles to check')
-assert any('class="katex' in html and '<math' in html for html in articles.values()), 'No server-rendered KaTeX equations found'
+# A site with only draft articles or prose-only essays is perfectly publishable.
+for entry in notes:
+    html=articles['posts/'+entry['slug']+'.html']
+    if entry.get('has_math') and not ('class="katex' in html and '<math' in html):
+        sys.exit('Server-rendered KaTeX + MathML missing: '+entry['slug'])
+if len(re.findall(r'class="note"',home)) != len(notes):
+    sys.exit('Home page static article list differs from published notes')
 for path,html in articles.items():
     if 'article-comment' not in html:sys.exit('Article missing discussion component: '+path)
     if '../assets/comments.js' not in html:sys.exit('Article comment loader missing: '+path)
-for path in ('feed.xml', 'sitemap.xml', 'robots.txt', 'assets/comments.js', 'assets/admin.js'):
+for path in ('feed.xml', 'sitemap.xml', 'robots.txt', '404.html', 'assets/comments.js', 'assets/admin.js'):
     request(path)
 admin=request('admin/')
 if 'app.pagescms.org' not in admin:sys.exit('Admin editing entry is missing')

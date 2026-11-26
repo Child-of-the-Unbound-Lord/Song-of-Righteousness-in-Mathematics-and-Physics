@@ -26,6 +26,9 @@ content:
       - { name: interests, label: 兴趣列表, type: string }
       - { name: hero_action, label: 阅读按钮文案, type: string }
       - { name: github_username, label: GitHub 用户名, type: string }
+      - { name: contact_email, label: 公开联系邮箱（不填则不展示）, type: string }
+      - { name: scholar_url, label: Google Scholar 主页链接（可选）, type: string }
+      - { name: orcid_url, label: ORCID 链接（可选）, type: string }
       - name: about_paragraphs
         label: 关于我的段落
         type: text

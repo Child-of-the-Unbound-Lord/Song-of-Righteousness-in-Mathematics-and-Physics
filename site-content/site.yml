@@ -8,6 +8,10 @@ interest_label: 当前兴趣
 interests: 数学 / 物理 / 文学与艺术
 hero_action: 开始阅读
 github_username: Child-of-the-Unbound-Lord
+# 以下三项公开展示；不需要时保持空白即可。
+contact_email: ''
+scholar_url: ''
+orcid_url: ''
 about_paragraphs:
   - 本科阶段的个人学术与创作空间。站内记录数学、统计、物理、天文、文学和动画相关的阅读、练习与探索。
   - 这里将学习记录与已经发表的学术成果分开呈现；未核实的经历不会写成既有成就。

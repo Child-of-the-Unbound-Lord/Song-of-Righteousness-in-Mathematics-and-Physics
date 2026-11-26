@@ -29,8 +29,9 @@ function render(){
   const query=$('#query');const list=$('#note-list');if(!query||!list)return;
   const term=query.value.trim().toLocaleLowerCase();
   const found=notes.filter(note=>(type==='all'||note.tag===type)&&[note.title,note.type,note.excerpt,...(note.keywords||[])].join(' ').toLocaleLowerCase().includes(term));
-  list.innerHTML=found.map(note=>`<a class="note" href="posts/${encodeURIComponent(note.slug)}.html"><div><small>${escapeHtml(note.date)} · ${escapeHtml(note.type)}</small><h3>${escapeHtml(note.title)}${note.demo?'<em>排版示例</em>':''}</h3><p>${escapeHtml(note.excerpt)}</p></div><span aria-hidden="true">↗</span></a>`).join('');
+  list.innerHTML=found.map(note=>`<a class="note" href="posts/${encodeURIComponent(note.slug)}.html"><div><small>${escapeHtml(note.date)} · ${escapeHtml(note.type)} · 约 ${Number(note.reading_minutes)||1} 分钟</small><h3>${escapeHtml(note.title)}${note.demo?'<em>排版示例</em>':''}</h3><p>${escapeHtml(note.excerpt)}</p></div><span aria-hidden="true">↗</span></a>`).join('');
   const empty=$('#no-results');if(empty)empty.hidden=!!found.length;
+  const count=$('#search-result-count');if(count)count.textContent=`${found.length} 篇手记`;
 }
 $('#query')?.addEventListener('input',render);
 all('[data-filter]').forEach(button=>button.addEventListener('click',()=>{

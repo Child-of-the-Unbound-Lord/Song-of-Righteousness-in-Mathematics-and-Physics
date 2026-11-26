@@ -8,7 +8,8 @@ document.getElementById('print')?.addEventListener('click',()=>window.print());
 document.querySelectorAll('.article pre').forEach(pre=>{
  const btn=document.createElement('button');btn.className='code-copy';btn.textContent='复制代码';btn.type='button';
  btn.addEventListener('click',async()=>{
-  try{await navigator.clipboard.writeText(pre.querySelector('code')?.innerText||pre.innerText);btn.textContent='已复制'}
+  try{const source=pre.cloneNode(true);source.querySelector('.code-copy')?.remove();
+  await navigator.clipboard.writeText(source.textContent||'');btn.textContent='已复制'}
   catch{btn.textContent='复制失败';}
  });
  pre.prepend(btn);

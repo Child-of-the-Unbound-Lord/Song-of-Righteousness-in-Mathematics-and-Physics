@@ -20,6 +20,7 @@ from urllib.parse import urlsplit
 import yaml
 from bs4 import BeautifulSoup
 from markdown_it import MarkdownIt
+from mdit_py_plugins.footnote import footnote_plugin
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import get_lexer_by_name, TextLexer
@@ -48,10 +49,21 @@ def asset_path(value):
 
 
 def safe_url(url):
+    """Allow normal web links and site-local paths, never script or protocol-relative URLs."""
     u = text(url).strip()
-    if u.startswith("/") or (urlsplit(u).scheme in ("https", "http")):
+    if not u or any(c.isspace() or ord(c) < 32 for c in u):
+        return "#"
+    if u.startswith("//") or u.startswith("\\"):
+        return "#"
+    if u.startswith(("/", "#")):
         return u
-    return "#"  # do not allow script/data links in content files
+    try:
+        parts = urlsplit(u)
+        if parts.scheme.lower() in {"https", "http"} and parts.netloc and not parts.username and not parts.password:
+            return u
+    except ValueError:
+        pass  # Bad URLs should not prevent publication of the whole website.
+    return "#"  # do not allow javascript:, data:, and other unsupported links
 
 
 def tag(soup, name, attrs=None, value=None):
@@ -175,6 +187,8 @@ def render_tex(items, preview):
 
 def make_markdown_renderer():
     md = MarkdownIt("commonmark", {"html": False, "breaks": False}).enable("table").enable("strikethrough")
+    # Footnotes are essential for academic notes. Raw HTML stays disabled.
+    md.use(footnote_plugin)
 
     def fence(tokens, idx, options, env):
         entry = tokens[idx]
@@ -306,23 +320,35 @@ def update_index(config, themes, articles, projects, research, publications, com
     identity.select_one("strong").string = username
     identity.select_one("a")["href"] = safe_url(f"https://github.com/{username}")
     identity.select_one("img")["src"] = f"https://github.com/{username}.png?size=112"
+    # Optional public contact links live in the same CMS-managed file as the bio.
+    contact_links = tag(soup, "div", {"class": "contact-links"})
+    email = text(config.get("contact_email", "")).strip()
+    if email and re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+        contact_links.append(tag(soup, "a", {"href": "mailto:" + email}, "联系邮箱 ↗"))
+    for field, label in (("scholar_url", "Google Scholar ↗"), ("orcid_url", "ORCID ↗")):
+        url = safe_url(config.get(field, ""))
+        if url != "#" and url.startswith("https://"):
+            contact_links.append(tag(soup, "a", {"href": url, "target": "_blank", "rel": "noopener noreferrer"}, label))
+    if contact_links.contents:
+        identity.select_one("div").append(contact_links)
     for anchor in soup.select("a[href='https://github.com/Child-of-the-Unbound-Lord']"):
         anchor["href"] = safe_url(f"https://github.com/{username}")
     for f in soup.select("footer > span"):
         if config["title"] in f.get_text():
             f.clear(); f.append(text(config["footer"]))
+    default_theme = next((theme for theme in themes if theme.get("id") == "mai"), themes[0])
     buttons = soup.select("[data-settheme]")
     wrapper = buttons[0].parent; wrapper.clear()
     for theme in themes:
-        button = tag(soup, "button", {"data-settheme": theme["id"], "aria-pressed": "true" if theme["id"] == "mai" else "false", "title": theme.get("description", "")})
+        button = tag(soup, "button", {"data-settheme": theme["id"], "aria-pressed": "true" if theme["id"] == default_theme["id"] else "false", "title": theme.get("description", "")})
         button.append(tag(soup, "i")); button.append(theme["label"])
         wrapper.append(button)
     art = soup.select_one(".hero-art")
     for decorative in art.select(".orbit, .big-moon, .landscape"):
         decorative.decompose()
-    figure = tag(soup, "img", {"class": "theme-illustration", "id": "theme-illustration", "src": asset_path(themes[0]["image"]), "alt": themes[0]["description"], "width": "1100", "height": "740", "fetchpriority": "high"})
+    figure = tag(soup, "img", {"class": "theme-illustration", "id": "theme-illustration", "src": asset_path(default_theme["image"]), "alt": default_theme["description"], "width": "1100", "height": "740", "fetchpriority": "high"})
     art.insert(0, figure)
-    set_string(soup, "#theme-caption", themes[0]["caption"])
+    set_string(soup, "#theme-caption", default_theme["caption"])
     scene_foot = soup.select_one(".scene-foot")
     scene_foot.clear()
     scene_foot.append("有些问题，值得再想一遍。")
@@ -335,8 +361,28 @@ def update_index(config, themes, articles, projects, research, publications, com
     js = OUTPUT / "assets" / "data.js"
     notes = [{"slug": a["slug"], "title": a.get("title", ""), "date": a["date"], "tag": a.get("category", "arts"),
               "type": a.get("category_label", ""), "excerpt": a.get("excerpt", ""),
-              "keywords": [v.strip() for v in text(a.get("keywords")).split(",") if v.strip()], "demo": bool(a.get("sample", False))}
+              "keywords": [v.strip() for v in text(a.get("keywords")).split(",") if v.strip()],
+              "demo": bool(a.get("sample", False)), "has_math": bool(extract_math(a["body"])[1]),
+              "reading_minutes": max(1, (len(re.sub(r"\s+", "", a["body"])) + 499) // 500)}
              for a in articles]
+    # Progressive enhancement: articles are visible and indexable even without JavaScript.
+    list_node = soup.select_one("#note-list")
+    list_node.clear()
+    for note in notes:
+        card = tag(soup, "a", {"class": "note", "href": "posts/" + note["slug"] + ".html"})
+        info = tag(soup, "div")
+        info.append(tag(soup, "small", value=f'{note["date"]} · {note["type"]} · 约 {note["reading_minutes"]} 分钟'))
+        h3 = tag(soup, "h3", value=note["title"])
+        if note["demo"]:
+            h3.append(tag(soup, "em", value="排版示例"))
+        info.append(h3)
+        info.append(tag(soup, "p", value=note["excerpt"]))
+        card.append(info)
+        card.append(tag(soup, "span", {"aria-hidden": "true"}, "↗"))
+        list_node.append(card)
+    if not notes:
+        soup.select_one("#no-results").attrs.pop("hidden", None)
+        set_string(soup, "#no-results", "还没有公开文章。你可以从内容后台发布第一篇 Markdown 手记。")
     # Content data is user-controlled. Escaping < removes accidental script-close sequences.
     def jsobj(obj):
         return json.dumps(obj, ensure_ascii=False).replace("<", "\\u003c").replace("\u2028", "\\u2028")
@@ -350,8 +396,15 @@ def update_index(config, themes, articles, projects, research, publications, com
     footer = soup.select_one("footer")
     if footer:
         footer.append(tag(soup, "a", {"href": "feed.xml", "title": "订阅最新文章"}, "RSS 订阅"))
-    # HTML metadata
+    # Keep social previews consistent with the editor-managed site content.
     soup.select_one('meta[name="description"]')["content"] = config["intro"]
+    for prop, value in (("og:title", config["title"] + " · " + config.get("english_title", "")),
+                        ("og:description", config["intro"])):
+        element = soup.select_one('meta[property="' + prop + '"]')
+        if element:
+            element["content"] = value
+    if themes:
+        soup.head.append(tag(soup, "meta", {"property": "og:image", "content": SITE_ROOT + asset_path(default_theme["image"])}))
     soup.body.append(tag(soup, "script", {"src": "assets/comments.js"}))
     (OUTPUT / "index.html").write_text(str(soup), encoding="utf-8")
 
@@ -376,6 +429,9 @@ def update_article(meta, article_html, headings, comments):
     for child in list(fragment.contents):
         body.append(child)
     tools = soup.select_one(".article-tools")
+    # An editable source link is useful for the owner and harmless for readers.
+    tools.append(tag(soup, "a", {"class": "edit-source", "target": "_blank", "rel": "noopener noreferrer",
+                                 "href": "https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/edit/main/site-content/articles/" + meta["slug"] + ".md"}, "编辑这篇原稿 ↗"))
     tools.insert_before(body)
     toc = soup.select_one(".toc"); toc.clear()
     toc.append(tag(soup, "b", value="本文目录"))
@@ -470,6 +526,8 @@ def main():
     formatter = HtmlFormatter(style="monokai", cssclass="highlight")
     (OUTPUT / "assets" / "code.css").write_text(formatter.get_style_defs(".highlight") + "\n", encoding="utf-8")
     build_discovery_files(site, articles)
+    # Friendly fallback when a shared article was renamed, deleted or left as draft.
+    (OUTPUT / "404.html").write_text((TEMPLATES / "404.html").read_text(encoding="utf-8"), encoding="utf-8")
     # Prevent github pages default Jekyll processing.
     (OUTPUT / ".nojekyll").write_text("", encoding="utf-8")
     print(f"Build complete: {len(articles)} articles; {formula_count} math expressions; {len(themes)} themes.")

@@ -12,11 +12,13 @@
 
 内容入口：
 
-- **首页和关于我** — `site-content/site.yml`，可编辑标题、简介、研究室说明、栏目文案及 GitHub 用户名。
+- **首页和关于我** — `site-content/site.yml`，可编辑标题、简介、研究室说明、栏目文案、公开联系邮箱、学术主页链接及 GitHub 用户名。
 - **Markdown 文章** — `site-content/articles/*.md`，增加、删除、修改文章。支持 `draft: true` 草稿不公开；`sample: true` 表示排版示例。
 - **研究方向 / 项目列表 / 论文与成果** — `site-content/research.yml`、`projects.yml`、`publications.yml`。
 - **四套角色主题** — `site-content/themes.yml`，可修改主题文案与插画路径；上传媒体后更新 `image` 字段。CSS 的配色如要更改需修改 `docs/assets/style.css`，普通文本内容不用碰代码。
 - **评论设置** — `site-content/comments.yml`。只有仓库开启 Discussions、安装 giscus 且 category_id 正确时才应设置 `enabled: true`。
+
+**脚注写法**：在正文写 `这是一条注释[^1]`，并在文章末尾添加 `[^1]: 注释的来源与页码。`；正文引用也可使用标准 Markdown 链接。
 
 **公式写法**：在 Pages CMS 正文编辑器中切换到 **Source（源码）** 模式；可用 `$E=mc^2$`、`$$...$$`、`\\(...\\)`、`\\[...\\]`。构建时 KaTeX 0.19.1 在服务器端直接渲染为 HTML + MathML，访客无需等待数学脚本加载，`docs/assets/katex` 字体与样式会一起发布。
 
@@ -75,3 +77,11 @@ python -m http.server 8000 -d docs
 ## 内容边界
 
 当前三篇文章是明确标注的排版示例，不是作者的研究成果；论文列表默认为空，防止把演示文章冒充论文。主题素材是原创场景与角色气质的视觉设计，不复制番剧现有截图或官方立绘。
+
+## 编辑时不会阻止发布的情况
+
+- 如果暂时把所有文章改成 `draft: true`，首页会显示「还没有公开文章」，网站仍能部署。
+- 如果某篇文章没有 LaTeX 公式，也能单独发布；有公式时构建会验证 KaTeX HTML 与 MathML。
+- 如果删除或更名一篇文章，原来的链接将显示 404 提示和返回入口。
+- 每篇文章最下方有「编辑这篇原稿」链接，已登录且有仓库写入权限的人可以直接在 GitHub 网页上修改 Markdown。
+- 阅读页面支持 `[^1]` 脚注与正文引用；代码块的复制不包含按钮文字。

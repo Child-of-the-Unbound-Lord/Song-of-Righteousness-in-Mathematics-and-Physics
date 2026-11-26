@@ -22,3 +22,12 @@ body{margin:0}.article-shell{max-width:960px;margin:0 auto;padding:34px 24px 120
 .reading-progress{position:fixed;left:0;right:0;top:0;height:3px;background:var(--accent);z-index:60;transform:scaleX(0);transform-origin:left;pointer-events:none;box-shadow:0 0 10px color-mix(in srgb,var(--accent),transparent 35%)}
 .toc a.toc-active{color:var(--accent);font-weight:650;border-left:2px solid var(--accent);margin-left:-21px;padding-left:19px}
 @media print{.reading-progress{display:none}}
+
+/* Academic footnotes and source editing */
+.prose .footnotes{margin-top:56px;padding-top:22px;border-top:1px solid var(--line);font-size:13px}
+.prose .footnotes ol{padding-left:25px}.prose .footnotes li,.prose .footnotes p{font-size:13px;line-height:1.8}
+.prose .footnotes a,.prose .footnote-ref{color:var(--accent)}
+.prose sup{line-height:0}
+.article-tools .edit-source{display:inline-flex;align-items:center;padding:10px 14px;font-size:12px;background:var(--panel);border:1px solid var(--line);border-radius:7px;color:var(--text)}
+.article-tools .edit-source:hover{border-color:var(--accent);color:var(--accent)}
+@media print{.article-tools .edit-source{display:none}}

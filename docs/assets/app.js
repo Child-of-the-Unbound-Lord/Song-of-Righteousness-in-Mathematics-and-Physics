@@ -1,1 +1,47 @@
-(()=>{'use strict';const $=s=>document.querySelector(s);const all=s=>[...document.querySelectorAll(s)];const themes={mai:'麻衣 · 紫蓝月夜',yukino:'雪乃 · 冷蓝雪景',frieren:'芙莉莲 · 银绿森林',eru:'爱瑠 · 暖金书房'};let mode='all';let safe=null;try{safe=localStorage.getItem('moonlit-theme')}catch{}let current=themes[safe]?safe:'mai';function theme(t){current=t;document.body.dataset.theme=t;try{localStorage.setItem('moonlit-theme',t)}catch{}$('#theme-caption').textContent=themes[t];all('[data-settheme]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.settheme===t)));}all('[data-settheme]').forEach(b=>b.addEventListener('click',()=>theme(b.dataset.settheme)));theme(current);$('#read-mode').addEventListener('click',()=>{const on=document.body.classList.toggle('reading');$('#read-mode').setAttribute('aria-pressed',String(on));$('#read-mode').textContent=on?'退出专注':'专注阅读'});const notes=window.LAB_NOTES||[];function escape(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function render(){const q=$('#query').value.trim().toLocaleLowerCase();const found=notes.filter(x=>(mode==='all'||x.tag===mode)&&[x.title,x.type,x.excerpt,...x.keywords].join(' ').toLocaleLowerCase().includes(q));$('#note-list').innerHTML=found.map(x=>`<a class="note" href="posts/${encodeURIComponent(x.slug)}.html"><div><small>${escape(x.date)} · ${escape(x.type)}</small><h3>${escape(x.title)}${x.demo?'<em>排版示例</em>':''}</h3><p>${escape(x.excerpt)}</p></div><span aria-hidden="true">↗</span></a>`).join('');$('#no-results').hidden=!!found.length}$('#query').addEventListener('input',render);all('[data-filter]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.filter;all('[data-filter]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));render()}));render();$('#year').textContent=new Date().getFullYear();const cfg=window.LAB_GISCUS;if(cfg&&cfg.repo&&cfg.repoId&&cfg.categoryId){const box=$('#comment-box');box.innerHTML='';box.classList.remove('empty');const s=document.createElement('script');s.src='https://giscus.app/client.js';s.async=true;s.crossOrigin='anonymous';Object.entries({repo:cfg.repo,'repo-id':cfg.repoId,category:cfg.category,'category-id':cfg.categoryId,mapping:'pathname',strict:'0','reactions-enabled':'1','emit-metadata':'0','input-position':'top',theme:'dark_dimmed',lang:'zh-CN'}).forEach(([k,v])=>s.setAttribute('data-'+k,v));box.append(s)}})();
+(()=>{'use strict';
+const $=s=>document.querySelector(s);
+const all=s=>[...document.querySelectorAll(s)];
+const themes=Object.fromEntries((window.LAB_THEMES||[]).map(x=>[x.id,x]));
+let mode='all';
+let previous=null;
+try{previous=localStorage.getItem('moonlit-theme')}catch{}
+let current=themes[previous]?previous:'mai';
+function theme(id){
+  if(!themes[id])return;
+  current=id;
+  document.body.dataset.theme=id;
+  try{localStorage.setItem('moonlit-theme',id)}catch{}
+  const settings=themes[id];
+  const caption=$('#theme-caption');if(caption)caption.textContent=settings.caption;
+  const image=$('#theme-illustration');if(image){image.src=settings.image;image.alt=settings.description;}
+  all('[data-settheme]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.settheme===id)));
+}
+all('[data-settheme]').forEach(button=>button.addEventListener('click',()=>theme(button.dataset.settheme)));
+theme(current);
+const read=$('#read-mode');if(read)read.addEventListener('click',()=>{
+  const enabled=document.body.classList.toggle('reading');
+  read.setAttribute('aria-pressed',String(enabled));read.textContent=enabled?'退出专注':'专注阅读';
+});
+const notes=window.LAB_NOTES||[];
+let type='all';
+function escapeHtml(value){return String(value||'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));}
+function render(){
+  const query=$('#query');const list=$('#note-list');if(!query||!list)return;
+  const term=query.value.trim().toLocaleLowerCase();
+  const found=notes.filter(note=>(type==='all'||note.tag===type)&&[note.title,note.type,note.excerpt,...(note.keywords||[])].join(' ').toLocaleLowerCase().includes(term));
+  list.innerHTML=found.map(note=>`<a class="note" href="posts/${encodeURIComponent(note.slug)}.html"><div><small>${escapeHtml(note.date)} · ${escapeHtml(note.type)}</small><h3>${escapeHtml(note.title)}${note.demo?'<em>排版示例</em>':''}</h3><p>${escapeHtml(note.excerpt)}</p></div><span aria-hidden="true">↗</span></a>`).join('');
+  const empty=$('#no-results');if(empty)empty.hidden=!!found.length;
+}
+$('#query')?.addEventListener('input',render);
+all('[data-filter]').forEach(button=>button.addEventListener('click',()=>{
+ type=button.dataset.filter;
+ all('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+ render();
+}));
+render();
+const year=$('#year');if(year)year.textContent=new Date().getFullYear();
+all('.bibtex-copy').forEach(button=>button.addEventListener('click',async()=>{
+ try{await navigator.clipboard.writeText(button.dataset.bibtex||'');button.textContent='已复制 BibTeX';}
+ catch{button.textContent='复制失败';}
+}));
+})();

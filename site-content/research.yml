@@ -1,0 +1,9 @@
+- title: 数学与统计
+  summary: 证明、抽象结构、概率模型以及数学问题的计算实验。
+  tags: Analysis, Probability
+- title: 物理与天文
+  summary: 从物理模型到天文现象，关注推导、近似与可验证的解释。
+  tags: Mechanics, Astronomy
+- title: 文学、语言与艺术
+  summary: 分析叙事结构、角色心理、视觉语言与文本的相互关联。
+  tags: Narrative, Media studies

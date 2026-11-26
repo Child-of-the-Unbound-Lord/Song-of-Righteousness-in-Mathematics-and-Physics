@@ -3,3 +3,17 @@
 /* Keyboard navigation and motion preferences */
 a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+/* Illustrated scenes, content editor entry and publication records */
+.theme-illustration{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:55% 50%;transition:opacity .25s ease;filter:saturate(.91)}
+.hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#06102390 0%,transparent 31%,transparent 58%,#0b112ed6 100%);pointer-events:none}
+.scene-head,.scene-foot{z-index:3;color:#f8f8ff;text-shadow:0 1px 8px #000d,0 2px 18px #0009}
+.hero-art:hover .theme-illustration{filter:saturate(1.05)}
+.theme-panel .themes button:hover{transform:translateY(-2px);border-color:var(--accent)}
+.admin-link{color:var(--accent)!important}
+.publication{padding:22px 2px;border-bottom:1px solid var(--line)}
+.publication h3{font-size:18px;margin:10px 0 8px}.publication small{color:var(--accent)}.publication p{color:var(--muted);font-size:13px;margin:0 0 12px}
+.publication-links{display:flex;flex-wrap:wrap;gap:16px}
+.publication-links a,.publication-links button{font-size:12px;color:var(--accent);background:none;border:0;padding:0;cursor:pointer}
+#comments #comment-box:not(.empty){min-height:200px}
+@media(max-width:580px){.hero-art{height:360px}.theme-illustration{object-position:57% 50%}.scene-head,.scene-foot{left:18px;right:18px}}

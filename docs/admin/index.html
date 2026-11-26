@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>内容管理 · 月下研究室</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.admin-shell{max-width:910px;margin:0 auto;padding:42px 24px 85px;position:relative;z-index:1}
+.admin-shell h1{font-size:clamp(34px,6vw,55px);margin:35px 0 12px}.admin-lead{max-width:680px;color:var(--muted);font-size:16px}
+.admin-panel{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:26px;margin:32px 0}
+.admin-panel h2{font-size:21px;margin:0 0 15px}.admin-panel p,.admin-panel li{font-size:14px;color:var(--muted);line-height:1.9}
+.admin-panel a:not(.button){color:var(--accent);text-decoration:underline}.admin-panel code{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#f4d3b3}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.admin-grid .admin-panel{margin:0}
+.admin-panel pre{white-space:pre-wrap;background:#0e1428;border:1px solid var(--line);border-radius:9px;padding:16px;overflow:auto;color:#d2e8ff;font-size:13px;line-height:1.65}
+.admin-top{display:flex;justify-content:space-between;align-items:center;gap:15px}.admin-top a{font-size:14px;color:var(--accent)}
+@media(max-width:720px){.admin-grid{grid-template-columns:1fr}.admin-shell{padding:28px 18px 65px}}
+</style>
+</head>
+<body data-theme="mai">
+<div class="sky" aria-hidden="true"><i class="moon"></i></div>
+<div class="admin-shell">
+<div class="admin-top"><a href="../index.html">← 返回月下研究室</a><span>OWNER'S EDITING DESK</span></div>
+<h1>内容管理<span class="dot">.</span></h1>
+<p class="admin-lead">文章、简介、项目、研究方向、论文和角色主题，统一在 Pages CMS 的网页编辑器里管理。保存后 GitHub 会自动构建并更新公开网站。</p>
+<div class="admin-panel">
+<h2>开始编辑</h2>
+<p>第一次使用：点击下面的按钮，使用你的 GitHub 账号登录 Pages CMS，只授权个人主页仓库 <strong>Song-of-Righteousness-in-Mathematics-and-Physics</strong>。此后可以直接进入内容管理界面。</p>
+<a class="button primary" href="https://app.pagescms.org/" target="_blank" rel="noopener noreferrer">使用 GitHub 登录内容后台 ↗</a>
+<p>仓库：<code>Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics</code>，默认分支为 <code>main</code>。只有拥有仓库写入权限的人才能修改内容；访客即使看到本页也不能编辑。</p>
+</div>
+<div class="admin-grid">
+<div class="admin-panel"><h2>文章与 LaTeX</h2><p>进入「Markdown 文章」，创建或编辑文章。正文切换到 <strong>Source</strong> 源码模式，输入标准 Markdown。</p>
+<pre>## 本节标题
+
+行内公式：$E=mc^2$
+
+$$
+\int_0^1 x^2\,dx=\frac13
+$$
+
+```python
+print("moonlit")
+```</pre>
+<p>支持 <code>$...$</code>、<code>$$...$$</code>、<code>\(...\)</code> 和 <code>\[...\]</code>，公式由构建服务器的 KaTeX 渲染。文章设为草稿时不会公开。</p></div>
+<div class="admin-panel"><h2>其他可编辑内容</h2><p>「首页和关于我」：名称、身份、介绍、联系方式、栏目文案。</p><p>「研究方向」「项目列表」「论文与成果」：增加、删除、排序和编辑结构化条目。</p><p>「四套角色主题」：修改主题名字、配色关联文案与插画路径；媒体库允许上传图片。</p><p>「GitHub 评论设置」：填好 giscus 参数后直接切换启用。</p></div>
+</div>
+<div class="admin-panel"><h2>评论设置（首次需要授权）</h2>
+<p>打开 <a href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/settings" target="_blank" rel="noopener noreferrer">仓库 Settings</a>，在 General → Features 开启 Discussions。到 <a href="https://github.com/apps/giscus" target="_blank" rel="noopener noreferrer">giscus GitHub App</a> 安装页面，仅授予此仓库权限。最后打开 <a href="https://giscus.app/zh-CN" target="_blank" rel="noopener noreferrer">giscus 配置器</a> 复制 Category ID，在内容后台的「GitHub 评论设置」中粘贴，打开「启用评论」。</p>
+<p>注意：评论数据存储在公开的 GitHub Discussions 中，管理员可通过 GitHub 管理；这些评论不是私密留言。</p>
+</div>
+<div class="admin-panel"><h2>在哪里看发布结果？</h2>
+<p>编辑完成点击保存后，打开 <a href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/actions/workflows/moonlit-pages.yml" target="_blank" rel="noopener noreferrer">网站自动发布工作流</a> 查看状态。完成后前往 <a href="../index.html">公开首页</a> 检查。原始 Markdown 和 YAML 文件永远保存在 GitHub 仓库中，可以回退历史版本。</p>
+</div>
+</div>
+<script>try{const t=localStorage.getItem('moonlit-theme');if(['mai','yukino','frieren','eru'].includes(t))document.body.dataset.theme=t}catch{}</script>
+</body>
+</html>

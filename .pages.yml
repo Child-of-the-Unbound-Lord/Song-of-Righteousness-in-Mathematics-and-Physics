@@ -1,0 +1,135 @@
+# Pages CMS: https://app.pagescms.org/
+# Sign in with GitHub and grant access to this repository only.
+media:
+  input: docs/assets/uploads
+  output: /Song-of-Righteousness-in-Mathematics-and-Physics/assets/uploads
+content:
+  - name: homepage
+    label: 首页和关于我
+    type: file
+    path: site-content/site.yml
+    format: yaml
+    fields:
+      - { name: title, label: 网站名称, type: string, required: true }
+      - { name: english_title, label: 英文名称, type: string }
+      - { name: role, label: 身份, type: string }
+      - { name: headline, label: 首页大标题, type: string }
+      - { name: lead, label: 一句话介绍, type: text }
+      - { name: intro, label: 首页介绍, type: text }
+      - { name: interest_label, label: 兴趣标题, type: string }
+      - { name: interests, label: 兴趣列表, type: string }
+      - { name: hero_action, label: 阅读按钮文案, type: string }
+      - { name: github_username, label: GitHub 用户名, type: string }
+      - name: about_paragraphs
+        label: 关于我的段落
+        type: text
+        list: true
+      - { name: footer, label: 页脚文字, type: text }
+      - { name: research_title, label: 研究栏目标题, type: string }
+      - { name: research_intro, label: 研究栏目说明, type: text }
+      - { name: publications_title, label: 成果栏目标题, type: string }
+      - { name: publications_intro, label: 成果栏目说明, type: text }
+      - { name: projects_title, label: 项目栏目标题, type: string }
+      - { name: projects_intro, label: 项目栏目说明, type: text }
+      - { name: notes_title, label: 手记栏目标题, type: string }
+      - { name: notes_intro, label: 手记栏目说明, type: text }
+      - { name: about_title, label: 关于栏目标题, type: string }
+      - { name: comments_title, label: 评论栏目标题, type: string }
+      - { name: comments_intro, label: 评论栏目说明, type: text }
+  - name: articles
+    label: Markdown 文章（支持 LaTeX）
+    type: collection
+    path: site-content/articles
+    format: yaml-frontmatter
+    filename: '{fields.slug}.md'
+    view:
+      primary: title
+      fields: [title, date, category, draft]
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - { name: title, label: 标题, type: string, required: true }
+      - name: slug
+        label: 网址标识（英文短横线）
+        type: string
+        required: true
+        pattern: '^[a-z0-9-]+$'
+      - { name: date, label: 发布日期, type: date }
+      - name: category
+        label: 分类
+        type: select
+        options:
+          values: [ { value: math, label: 数学 }, { value: physics, label: 物理 }, { value: arts, label: 文学与动画 } ]
+      - { name: category_label, label: 类型说明, type: string }
+      - { name: excerpt, label: 摘要（用于搜索和文章列表）, type: text }
+      - { name: keywords, label: 关键词（逗号分隔）, type: string }
+      - { name: draft, label: 草稿（勾选则不公开）, type: boolean, default: false }
+      - { name: sample, label: 是否排版示例, type: boolean, default: false }
+      - name: body
+        label: 正文 Markdown（公式在 Source 模式写）
+        type: rich-text
+        options:
+          format: markdown
+          switcher: true
+          media: true
+  - name: research
+    label: 研究方向
+    type: file
+    path: site-content/research.yml
+    format: yaml
+    list: true
+    fields:
+      - { name: title, label: 方向, type: string }
+      - { name: summary, label: 简介, type: text }
+      - { name: tags, label: 标签（逗号分隔）, type: string }
+  - name: projects
+    label: 项目列表
+    type: file
+    path: site-content/projects.yml
+    format: yaml
+    list: true
+    fields:
+      - { name: title, label: 项目名称, type: string }
+      - { name: description, label: 项目描述, type: text }
+      - { name: url, label: 项目链接, type: string }
+      - { name: kind, label: 类型, type: string }
+  - name: publications
+    label: 论文与成果
+    type: file
+    path: site-content/publications.yml
+    format: yaml
+    list: true
+    fields:
+      - { name: title, label: 标题, type: string }
+      - { name: authors, label: 作者, type: string }
+      - { name: venue, label: 会议 / 期刊, type: string }
+      - { name: year, label: 年份, type: number }
+      - { name: doi, label: DOI 或论文链接, type: string }
+      - { name: pdf, label: PDF 链接, type: string }
+      - { name: bibtex, label: BibTeX, type: code, options: { format: markdown } }
+  - name: themes
+    label: 四套角色主题
+    type: file
+    path: site-content/themes.yml
+    format: yaml
+    list: true
+    fields:
+      - { name: id, label: 主题 ID (mai/yukino/frieren/eru), type: string }
+      - { name: label, label: 主题名, type: string }
+      - { name: caption, label: 场景标题, type: string }
+      - { name: description, label: 场景介绍, type: text }
+      - { name: image, label: 场景插画路径, type: image }
+  - name: comments
+    label: GitHub 评论设置
+    type: file
+    path: site-content/comments.yml
+    format: yaml
+    fields:
+      - { name: enabled, label: 启用评论, type: boolean }
+      - { name: repo, label: 评论仓库, type: string }
+      - { name: repo_id, label: Repo ID（giscus） , type: string }
+      - { name: category, label: Discussions 分类名称, type: string }
+      - { name: category_id, label: Category ID（giscus）, type: string }
+      - { name: notice, label: 未启用时显示的说明, type: text }

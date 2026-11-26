@@ -1,0 +1,25 @@
+title: 月下研究室
+english_title: Moonlit Lab
+role: 本科生 · 个人学术空间
+headline: 月下研究室
+lead: 在数学的结构、物理的规律与文字的细节之间，记录尚未完成的思考。
+intro: 这里整理课程笔记、论文阅读、代码实践与动画文本分析。每一条记录都尽量保留可追溯的出处。
+interest_label: 当前兴趣
+interests: 数学 / 物理 / 文学与艺术
+hero_action: 开始阅读
+github_username: Child-of-the-Unbound-Lord
+about_paragraphs:
+  - 本科阶段的个人学术与创作空间。站内记录数学、统计、物理、天文、文学和动画相关的阅读、练习与探索。
+  - 这里将学习记录与已经发表的学术成果分开呈现；未核实的经历不会写成既有成就。
+footer: 月下研究室 · 记下问题，也记下来源。
+research_title: 关注的方向
+research_intro: 兴趣并不等于成果。以下是持续学习的主题，具体成果另行列出。
+publications_title: 论文与学术记录
+publications_intro: 只展示已经核实的成果，不使用模板论文或虚构引用。
+projects_title: 代码与项目
+projects_intro: 来自已确认的公开 GitHub 账号。仓库中的模板示例不代表作者的论文或履历。
+notes_title: 研究手记
+notes_intro: 公式、代码、读书笔记和动画分析放在同一套可检索的文章目录里。
+about_title: 关于这间研究室
+comments_title: 留言与讨论
+comments_intro: 访客可使用 GitHub 账号参与讨论。

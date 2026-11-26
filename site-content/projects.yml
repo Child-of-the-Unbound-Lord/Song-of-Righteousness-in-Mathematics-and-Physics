@@ -1,0 +1,12 @@
+- title: Moonlit Lab / 月下研究室
+  description: 本站源码与持续维护的静态网站，内容采用 Markdown 与 YAML 管理。
+  url: https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics
+  kind: WEBSITE / SOURCE
+- title: al-folio
+  description: 学术主页模板的公开 Fork。模板中自带的示例论文和人物资料不属于个人成果。
+  url: https://github.com/Child-of-the-Unbound-Lord/al-folio
+  kind: OPEN SOURCE / FORK
+- title: LabFlow 耗材管理
+  description: 软件工程课程的耗材管理项目，具体分工和功能参见项目仓库。
+  url: https://github.com/Child-of-the-Unbound-Lord/Git-project-for-the-web-design-exam
+  kind: COURSE PROJECT

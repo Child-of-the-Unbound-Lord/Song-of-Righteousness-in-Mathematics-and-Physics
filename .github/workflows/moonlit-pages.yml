@@ -4,9 +4,12 @@ on:
   push:
     branches: [main]
     paths:
+      - 'site-content/**'
+      - 'site-tools/**'
+      - '.pages.yml'
       - 'docs/**'
+      - 'MOONLIT_LAB.md'
       - '.github/workflows/moonlit-pages.yml'
-      - 'site-tools/check_public_site.py'
   workflow_dispatch:
 
 permissions:
@@ -26,19 +29,37 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout source
+      - name: Checkout
         uses: actions/checkout@v4
-      - name: Prepare GitHub Pages
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Markdown and KaTeX
+        run: |
+          python -m pip install -r site-tools/requirements.txt
+          npm install --prefix site-tools --no-save --no-package-lock --ignore-scripts katex@0.19.1
+      - name: Build pages from content files
+        run: |
+          python site-tools/build_site.py
+          mkdir -p docs/assets/katex
+          cp site-tools/node_modules/katex/dist/katex.min.css docs/assets/katex/
+          cp -R site-tools/node_modules/katex/dist/fonts docs/assets/katex/
+          python site-tools/check_build.py
+      - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-      - name: Upload Moonlit Lab static files
+      - name: Upload static site
         uses: actions/upload-pages-artifact@v4
         with:
           path: docs
-      - name: Deploy GitHub Pages
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-      - name: Check public homepage, assets and article links
+      - name: Verify public HTML, math, images and links
         env:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
-        run: python3 site-tools/check_public_site.py
+        run: python site-tools/check_public_site.py

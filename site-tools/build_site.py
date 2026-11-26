@@ -29,6 +29,7 @@ SOURCE = ROOT / "site-content"
 OUTPUT = ROOT / "docs"
 TEMPLATES = ROOT / "site-tools" / "templates"
 SITE_ROOT = "https://child-of-the-unbound-lord.github.io/Song-of-Righteousness-in-Mathematics-and-Physics/"
+MEDIA_BASE = "/Song-of-Righteousness-in-Mathematics-and-Physics/"
 
 
 def read_yaml(path: Path):
@@ -39,6 +40,11 @@ def text(value):
     if isinstance(value, (date, datetime)):
         return value.isoformat()
     return str(value or "")
+
+
+def asset_path(value):
+    raw = text(value).strip()
+    return raw[len(MEDIA_BASE):] if raw.startswith(MEDIA_BASE) else raw
 
 
 def safe_url(url):
@@ -314,7 +320,7 @@ def update_index(config, themes, articles, projects, research, publications, com
     art = soup.select_one(".hero-art")
     for decorative in art.select(".orbit, .big-moon, .landscape"):
         decorative.decompose()
-    figure = tag(soup, "img", {"class": "theme-illustration", "id": "theme-illustration", "src": themes[0]["image"], "alt": themes[0]["description"], "width": "1100", "height": "740", "fetchpriority": "high"})
+    figure = tag(soup, "img", {"class": "theme-illustration", "id": "theme-illustration", "src": asset_path(themes[0]["image"]), "alt": themes[0]["description"], "width": "1100", "height": "740", "fetchpriority": "high"})
     art.insert(0, figure)
     set_string(soup, "#theme-caption", themes[0]["caption"])
     scene_foot = soup.select_one(".scene-foot")
@@ -325,7 +331,7 @@ def update_index(config, themes, articles, projects, research, publications, com
     nav = soup.select_one(".topbar nav")
     nav.append(tag(soup, "a", {"href": "admin/", "class": "admin-link"}, "管理内容"))
     # Introduce theme metadata as JSON in JS payload, not inline code.
-    payload = [(x) for x in themes]
+    payload = [{**x, "image": asset_path(x.get("image"))} for x in themes]
     js = OUTPUT / "assets" / "data.js"
     notes = [{"slug": a["slug"], "title": a.get("title", ""), "date": a["date"], "tag": a.get("category", "arts"),
               "type": a.get("category_label", ""), "excerpt": a.get("excerpt", ""),

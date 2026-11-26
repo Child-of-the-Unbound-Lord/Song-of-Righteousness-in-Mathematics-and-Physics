@@ -2,19 +2,19 @@
   label: 樱岛麻衣
   caption: 麻衣 · 紫蓝月夜
   description: 紫蓝海岸、月光与一间放着书的观星台。
-  image: assets/themes/mai.webp
+  image: /Song-of-Righteousness-in-Mathematics-and-Physics/assets/themes/mai.webp
 - id: yukino
   label: 雪之下雪乃
   caption: 雪乃 · 冷蓝雪景
   description: 雪夜里的图书馆与澄净而安静的思考。
-  image: assets/themes/yukino.webp
+  image: /Song-of-Righteousness-in-Mathematics-and-Physics/assets/themes/yukino.webp
 - id: frieren
   label: 芙莉莲
   caption: 芙莉莲 · 银绿森林
   description: 林间遗迹、星空与一段缓慢流动的时间。
-  image: assets/themes/frieren.webp
+  image: /Song-of-Righteousness-in-Mathematics-and-Physics/assets/themes/frieren.webp
 - id: eru
   label: 千反田爱瑠
   caption: 爱瑠 · 暖金书房
   description: 灯火、旧书与永远值得追问的好奇心。
-  image: assets/themes/eru.webp
+  image: /Song-of-Righteousness-in-Mathematics-and-Physics/assets/themes/eru.webp

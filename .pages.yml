@@ -1,8 +1,14 @@
 # Pages CMS: https://app.pagescms.org/
 # Sign in with GitHub and grant access to this repository only.
 media:
-  input: docs/assets/uploads
-  output: /Song-of-Righteousness-in-Mathematics-and-Physics/assets/uploads
+  - name: article_images
+    label: 文章图片
+    input: docs/assets/uploads
+    output: /Song-of-Righteousness-in-Mathematics-and-Physics/assets/uploads
+  - name: theme_images
+    label: 角色主题插画
+    input: docs/assets/themes
+    output: /Song-of-Righteousness-in-Mathematics-and-Physics/assets/themes
 content:
   - name: homepage
     label: 首页和关于我
@@ -73,7 +79,7 @@ content:
         options:
           format: markdown
           switcher: true
-          media: true
+          media: article_images
   - name: research
     label: 研究方向
     type: file
@@ -120,7 +126,11 @@ content:
       - { name: label, label: 主题名, type: string }
       - { name: caption, label: 场景标题, type: string }
       - { name: description, label: 场景介绍, type: text }
-      - { name: image, label: 场景插画路径, type: image }
+      - name: image
+        label: 场景插画
+        type: image
+        options:
+          media: theme_images
   - name: comments
     label: GitHub 评论设置
     type: file

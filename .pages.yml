@@ -142,4 +142,16 @@ content:
       - { name: repo_id, label: Repo ID（giscus） , type: string }
       - { name: category, label: Discussions 分类名称, type: string }
       - { name: category_id, label: Category ID（giscus）, type: string }
+      - name: mapping
+        label: 页面与评论的对应方式
+        type: select
+        options:
+          values: [ { value: pathname, label: 页面路径（建议保持） }, { value: url, label: 完整网址 } ]
+      - { name: reactions_enabled, label: 允许点赞和表态, type: boolean }
+      - { name: lang, label: 评论界面语言, type: string }
+      - name: input_position
+        label: 评论输入框位置
+        type: select
+        options:
+          values: [ { value: top, label: 顶部 }, { value: bottom, label: 底部 } ]
       - { name: notice, label: 未启用时显示的说明, type: text }

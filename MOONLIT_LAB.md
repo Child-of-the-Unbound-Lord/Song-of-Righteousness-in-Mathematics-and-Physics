@@ -36,12 +36,20 @@ print("hello")
 
 ## 评论启用
 
+评论页使用“先确认、后加载”的设计：读者点击载入后才会连接 giscus；同一篇文章按路径关联独立 Discussion。管理员可在 **管理内容 → 评论设置助手** 粘贴 giscus 生成的脚本并得到完整 YAML，无需手写仓库 ID。
+
 1. 仓库 **Settings → General → Features** 勾选 Discussions。
 2. 在 <https://github.com/apps/giscus> 安装 giscus GitHub App，只授予此仓库访问权限。
-3. 在 <https://giscus.app/zh-CN> 填入仓库，选择 `General` 分类，将分类 ID 复制到内容后台评论设置。
+3. 在 <https://giscus.app/zh-CN> 填入仓库，选择 `General` 分类，将生成的 `<script>` 复制到管理页的配置助手（或直接将 `data-category-id` 填入内容后台评论设置）。
 4. 在后台打开「启用评论」并保存，等待工作流发布成功。
 
 评论数据存放在公开的 GitHub Discussions，访客用 GitHub 登录，管理员在 Discussions 中审核和管理评论。打开以前保留「评论尚未开放」提示，不会伪装为已接入。
+
+## 网站品质与阅读体验
+
+- 每篇文章有阅读进度条、活动目录高亮、复制链接和代码复制。
+- 网站自动生成 `feed.xml` 与 `sitemap.xml`，加入新文章无需另外手工维护订阅源。
+- 评论默认手动载入，避免未同意时直接连接第三方 giscus；开启后可按文章路径对应独立 Discussion。
 
 ## 技术与自动部署
 

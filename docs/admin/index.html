@@ -15,6 +15,7 @@
 .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.admin-grid .admin-panel{margin:0}
 .admin-panel pre{white-space:pre-wrap;background:#0e1428;border:1px solid var(--line);border-radius:9px;padding:16px;overflow:auto;color:#d2e8ff;font-size:13px;line-height:1.65}
 .admin-top{display:flex;justify-content:space-between;align-items:center;gap:15px}.admin-top a{font-size:14px;color:var(--accent)}
+.admin-status{display:flex;align-items:center;flex-wrap:wrap;gap:12px;border:1px solid var(--line);padding:14px;border-radius:10px;background:var(--panel2);font-size:13px}.admin-status span{color:var(--muted);flex:1}.admin-status span[data-ready="yes"]{color:#bce7bf}.admin-status span[data-ready="no"]{color:#f1c59d}.admin-fields{display:grid;gap:12px;margin-top:22px}.admin-fields label{color:var(--text);font-size:13px}.admin-fields textarea,.admin-fields input{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:12px;font:13px/1.7 ui-monospace,Consolas,monospace;overflow-wrap:anywhere}.admin-fields button,.admin-status button{color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 14px;justify-self:start}.admin-fields button:hover,.admin-status button:hover{border-color:var(--accent)}.admin-fields [role=status]{color:var(--muted);font-size:12px}
 @media(max-width:720px){.admin-grid{grid-template-columns:1fr}.admin-shell{padding:28px 18px 65px}}
 </style>
 </head>
@@ -46,14 +47,36 @@ print("moonlit")
 <p>支持 <code>$...$</code>、<code>$$...$$</code>、<code>\(...\)</code> 和 <code>\[...\]</code>，公式由构建服务器的 KaTeX 渲染。文章设为草稿时不会公开。</p></div>
 <div class="admin-panel"><h2>其他可编辑内容</h2><p>「首页和关于我」：名称、身份、介绍、联系方式、栏目文案。</p><p>「研究方向」「项目列表」「论文与成果」：增加、删除、排序和编辑结构化条目。</p><p>「四套角色主题」：修改主题名字、配色关联文案与插画路径；媒体库允许上传图片。</p><p>「GitHub 评论设置」：填好 giscus 参数后直接切换启用。</p></div>
 </div>
-<div class="admin-panel"><h2>评论设置（首次需要授权）</h2>
-<p>打开 <a href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/settings" target="_blank" rel="noopener noreferrer">仓库 Settings</a>，在 General → Features 开启 Discussions。到 <a href="https://github.com/apps/giscus" target="_blank" rel="noopener noreferrer">giscus GitHub App</a> 安装页面，仅授予此仓库权限。最后打开 <a href="https://giscus.app/zh-CN" target="_blank" rel="noopener noreferrer">giscus 配置器</a> 复制 Category ID，在内容后台的「GitHub 评论设置」中粘贴，打开「启用评论」。</p>
-<p>注意：评论数据存储在公开的 GitHub Discussions 中，管理员可通过 GitHub 管理；这些评论不是私密留言。</p>
+<div class="admin-panel" id="comment-guide"><h2>评论设置 · giscus 配置助手</h2>
+<p>评论会对应首页或每篇文章的独立讨论。访客点击“载入评论”后才会连接第三方 giscus 服务，登录 GitHub 后才能发言。</p>
+<div class="admin-status"><strong>仓库状态</strong> <span id="discussion-state" role="status">正在检测…</span> <button id="check-discussions" type="button">重新检测</button></div>
+<ol>
+<li><a href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/settings" target="_blank" rel="noopener noreferrer">仓库 Settings</a> → General → Features → 勾选 Discussions。</li>
+<li><a href="https://github.com/apps/giscus" target="_blank" rel="noopener noreferrer">安装 giscus GitHub App</a>，只选择此仓库并同意所请求权限；这一步必须由仓库管理员完成。</li>
+<li><a href="https://giscus.app/zh-CN" target="_blank" rel="noopener noreferrer">giscus 配置器</a>中输入本仓库，选择一个 Discussions 分类，复制生成的嵌入代码。</li>
+<li>将代码粘贴到下面，点击“提取分类”，再复制配置至 <a href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/edit/main/site-content/comments.yml" target="_blank" rel="noopener noreferrer">comments.yml 编辑页</a>，或通过 Pages CMS“GitHub 评论设置”表单填写。</li>
+</ol>
+<div class="admin-fields">
+<label for="giscus-embed-code">可选：粘贴 giscus 生成的 script 代码</label>
+<textarea id="giscus-embed-code" rows="4" spellcheck="false" placeholder="从 giscus.app 复制包含 data-category-id 的 script 代码"></textarea>
+<button id="read-giscus-code" type="button">从代码提取分类信息</button>
+<label for="comment-category">Discussions 分类名称</label>
+<input id="comment-category" value="General" autocomplete="off" spellcheck="false">
+<label for="comment-category-id">Category ID</label>
+<input id="comment-category-id" placeholder="DIC_kw..." autocomplete="off" spellcheck="false">
+<label for="comment-yaml-output">自动生成的 YAML 配置</label>
+<textarea id="comment-yaml-output" rows="12" readonly spellcheck="false"></textarea>
+<button id="copy-comment-yaml" type="button">复制评论配置</button>
+<span id="admin-feedback" role="status"></span>
+</div>
+<p>仓库 ID 已核实，无需重新查找。这里生成的是公开配置，不包含密码或私密密钥。只有完成授权并使用正确的 Category ID，评论功能才可以真正启用。</p>
+<p>注意：GitHub Discussions 中的评论是公开的。站长可在 <a href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/discussions" target="_blank" rel="noopener noreferrer">Discussions 管理页</a>审核与回复。</p>
 </div>
 <div class="admin-panel"><h2>在哪里看发布结果？</h2>
 <p>编辑完成点击保存后，打开 <a href="https://github.com/Child-of-the-Unbound-Lord/Song-of-Righteousness-in-Mathematics-and-Physics/actions/workflows/moonlit-pages.yml" target="_blank" rel="noopener noreferrer">网站自动发布工作流</a> 查看状态。完成后前往 <a href="../index.html">公开首页</a> 检查。原始 Markdown 和 YAML 文件永远保存在 GitHub 仓库中，可以回退历史版本。</p>
 </div>
 </div>
+<script src="../assets/admin.js" defer></script>
 <script>try{const t=localStorage.getItem('moonlit-theme');if(['mai','yukino','frieren','eru'].includes(t))document.body.dataset.theme=t}catch{}</script>
 </body>
 </html>

@@ -17,3 +17,8 @@ body{margin:0}.article-shell{max-width:960px;margin:0 auto;padding:34px 24px 120
 .article-comment{margin-top:46px;padding-top:24px;border-top:1px solid var(--line)}.article-comment h2{font-size:22px}.article-comment-box p{color:var(--muted)}
 .toc-h3{padding-left:12px}.article .notice + .prose{margin-top:24px}
 @media(max-width:720px){.prose .katex-display{font-size:.93em}.article-grid{gap:25px}.article .math-display{padding:18px 10px}}
+
+/* Reading assistance: progress and chapter location. */
+.reading-progress{position:fixed;left:0;right:0;top:0;height:3px;background:var(--accent);z-index:60;transform:scaleX(0);transform-origin:left;pointer-events:none;box-shadow:0 0 10px color-mix(in srgb,var(--accent),transparent 35%)}
+.toc a.toc-active{color:var(--accent);font-weight:650;border-left:2px solid var(--accent);margin-left:-21px;padding-left:19px}
+@media print{.reading-progress{display:none}}

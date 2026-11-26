@@ -11,6 +11,9 @@ assert index.select_one('#theme-illustration')['src'].endswith('mai.webp')
 assert index.select_one('.admin-link')['href']=='admin/'
 assert index.select_one('#note-list')
 assert (OUT/'admin/index.html').exists()
+assert (OUT/'sitemap.xml').exists()
+assert (OUT/'feed.xml').exists()
+assert (OUT/'robots.txt').exists()
 pages=list((OUT/'posts').glob('*.html'))
 assert pages, 'At least one public article is required for this smoke test'
 math_found=0
@@ -19,6 +22,9 @@ for page in pages:
     assert article.select_one('.prose')
     assert article.select_one('link[href="../assets/katex/katex.min.css"]')
     assert article.select_one('#article-comments')
+    sources=[x.get('src') for x in article.select('script[src]')]
+    assert '../assets/data.js' in sources and '../assets/comments.js' in sources, 'Article comments loader missing'
+    assert sources.index('../assets/data.js') < sources.index('../assets/comments.js'), 'Comment script must load after config'
     assert article.select_one('link[rel="canonical"]')
     if article.select('.katex'):
         math_found += len(article.select('.katex'))

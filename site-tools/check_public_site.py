@@ -62,6 +62,9 @@ if not articles:sys.exit('No published articles to check')
 assert any('class="katex' in html and '<math' in html for html in articles.values()), 'No server-rendered KaTeX equations found'
 for path,html in articles.items():
     if 'article-comment' not in html:sys.exit('Article missing discussion component: '+path)
+    if '../assets/comments.js' not in html:sys.exit('Article comment loader missing: '+path)
+for path in ('feed.xml', 'sitemap.xml', 'robots.txt', 'assets/comments.js', 'assets/admin.js'):
+    request(path)
 admin=request('admin/')
 if 'app.pagescms.org' not in admin:sys.exit('Admin editing entry is missing')
 seen=set()

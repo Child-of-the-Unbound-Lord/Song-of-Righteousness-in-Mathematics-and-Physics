@@ -345,6 +345,11 @@ def update_index(config, themes, articles, projects, research, publications, com
     if not (comments.get("enabled") and comments.get("category_id")):
         set_string(soup, "#comment-box b", "GitHub Discussions 评论尚未启用")
         set_string(soup, "#comment-box p", comments.get("notice", "管理员正在配置评论。"))
+    # Feed link makes new essays discoverable without a platform account.
+    soup.head.append(tag(soup, "link", {"rel": "alternate", "type": "application/rss+xml", "title": "月下研究室 · 研究手记", "href": "feed.xml"}))
+    footer = soup.select_one("footer")
+    if footer:
+        footer.append(tag(soup, "a", {"href": "feed.xml", "title": "订阅最新文章"}, "RSS 订阅"))
     # HTML metadata
     soup.select_one('meta[name="description"]')["content"] = config["intro"]
     soup.body.append(tag(soup, "script", {"src": "assets/comments.js"}))
@@ -393,9 +398,49 @@ def update_article(meta, article_html, headings, comments):
     soup.head.append(tag(soup, "meta", {"property": "og:type", "content": "article"}))
     soup.head.append(tag(soup, "meta", {"property": "og:description", "content": text(meta.get("excerpt"))}))
     soup.head.append(tag(soup, "link", {"rel": "icon", "type": "image/svg+xml", "href": "../assets/favicon.svg"}))
+    soup.head.append(tag(soup, "link", {"rel": "alternate", "type": "application/rss+xml", "title": "月下研究室 · 研究手记", "href": "../feed.xml"}))
     # Site-wide giscus data already in data.js; use same loader on articles.
     script = tag(soup, "script", {"src": "../assets/data.js"}); soup.body.append(script)
+    soup.body.append(tag(soup, "script", {"src": "../assets/comments.js"}))
     (OUTPUT / "posts" / (meta["slug"] + ".html")).write_text(str(soup), encoding="utf-8")
+
+
+def build_discovery_files(config, articles):
+    """Generate sitemap and RSS from the same published Markdown catalog."""
+    import xml.etree.ElementTree as ET
+    from datetime import timezone
+    from email.utils import format_datetime
+    title = text(config.get("title", "月下研究室"))
+    ns = "http://www.sitemaps.org/schemas/sitemap/0.9"
+    ET.register_namespace("", ns)
+    root = ET.Element(f"{{{ns}}}urlset")
+    for url, lastmod in [(SITE_ROOT, ""), *[(SITE_ROOT + "posts/" + item["slug"] + ".html", item.get("date", "")) for item in articles]]:
+        node = ET.SubElement(root, f"{{{ns}}}url")
+        ET.SubElement(node, f"{{{ns}}}loc").text = url
+        if lastmod:
+            ET.SubElement(node, f"{{{ns}}}lastmod").text = lastmod
+    (OUTPUT / "sitemap.xml").write_bytes(ET.tostring(root, encoding="utf-8", xml_declaration=True))
+    rss = ET.Element("rss", version="2.0")
+    channel = ET.SubElement(rss, "channel")
+    for field, value in (("title", title + " · 研究手记"), ("link", SITE_ROOT),
+                         ("description", text(config.get("notes_intro", "个人学术笔记"))),
+                         ("language", "zh-cn")):
+        ET.SubElement(channel, field).text = value
+    for article in articles[:30]:
+        item = ET.SubElement(channel, "item")
+        url = SITE_ROOT + "posts/" + article["slug"] + ".html"
+        for field, value in (("title", text(article.get("title"))), ("link", url),
+                             ("guid", url), ("description", text(article.get("excerpt")))):
+            ET.SubElement(item, field).text = value
+        date_text = text(article.get("date"))
+        if date_text:
+            try:
+                parsed = datetime.fromisoformat(date_text).replace(tzinfo=timezone.utc)
+                ET.SubElement(item, "pubDate").text = format_datetime(parsed)
+            except ValueError:
+                pass
+    (OUTPUT / "feed.xml").write_bytes(ET.tostring(rss, encoding="utf-8", xml_declaration=True))
+    (OUTPUT / "robots.txt").write_text("User-agent: *\nAllow: /\nSitemap: " + SITE_ROOT + "sitemap.xml\n", encoding="utf-8")
 
 
 def main():
@@ -424,6 +469,7 @@ def main():
     # Include a printable code highlight theme, generated with Pygments.
     formatter = HtmlFormatter(style="monokai", cssclass="highlight")
     (OUTPUT / "assets" / "code.css").write_text(formatter.get_style_defs(".highlight") + "\n", encoding="utf-8")
+    build_discovery_files(site, articles)
     # Prevent github pages default Jekyll processing.
     (OUTPUT / ".nojekyll").write_text("", encoding="utf-8")
     print(f"Build complete: {len(articles)} articles; {formula_count} math expressions; {len(themes)} themes.")
